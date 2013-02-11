@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+	<head>
+		<title>iiiScience - API Help</title>
+	</head>
+	<body>
+		<h1>API Help</h1>
+		<p>This website only contains the API features currently. We're working on the rest :) To use the API and explore how things work try using some of the following links</p>
+
+		<h2>GET Information</h2>
+
+		<p>GET requests are requests to websites for information, they are the most common request made. You can make a GET request by simply pointing your browser to the information you wish to GET.</p>
+
+		<ul>
+			<li>
+				List the entities
+				<ul>
+					<li><a href="/api/contact/list/">/api/contact/list/</a></li>
+					<li><a href="/api/department/list/">/api/department/list/</a></li>
+					<li><a href="/api/equipment/list/">/api/equipment/list/</a></li>
+					<li><a href="/api/institution/list/">/api/institution/list/</a></li>
+					<li><a href="/api/keyword/list/">/api/keyword/list/</a></li>
+					<li><a href="/api/protocol/list/">/api/protocol/list/</a></li>
+				</ul>
+			</li>
+			<li>
+				Search for entities, the q=a part in these links means search query = 'a', change the 'a' to change the search
+				<ul>
+					<li><a href="/api/contact/search/?q=a">/api/contact/search/?q=a</a></li>
+					<li><a href="/api/department/search/?q=a">/api/department/search/?q=a</a></li>
+					<li><a href="/api/equipment/search/?q=a">/api/equipment/search/?q=a</a></li>
+					<li><a href="/api/institution/search/?q=a">/api/institution/search/?q=a</a></li>
+					<li><a href="/api/keyword/search/?q=a">/api/keyword/search/?q=a</a></li>
+					<li><a href="/api/protocol/search/?q=a">/api/protocol/search/?q=a</a></li>
+				</ul>
+			</li>
+			<li>
+				Lookup an individual entity, the number at the end of the link is the entity's ID, find IDs by listing or searching
+				<ul>
+					<li><a href="/api/contact/1/">/api/contact/1/</a></li>
+					<li><a href="/api/department/1/">/api/department/1/</a></li>
+					<li><a href="/api/equipment/1/">/api/equipment/1/</a></li>
+					<li><a href="/api/institution/1/">/api/institution/1/</a></li>
+					<li><a href="/api/keyword/1/">/api/keyword/1/</a></li>
+					<li><a href="/api/protocol/1/">/api/protocol/1/</a></li>
+				</ul>
+			</li>
+		</ul>
+
+		<h2>POST New Information</h2>
+
+		<p>A POST request is used when you wish to create a new entity, to add something to the database. To POST something you'll need some software that allows POSTing of data (There's a Firefox plugin called Poster, for instance).</p>
+
+		<ul>
+			<li>
+				Create an entity. POST the JSON data to the URL using Content-Type: application/json
+				<ul>
+					<li>URL: <a href="/api/contact/">/api/contact/</a>, Data: {"name":"Toby", "email":"toby@iiiscience.com"}</li>
+					<li>URL: <a href="/api/department/">/api/department/</a>, Data: {"name":"Department of Materials", "institution":1} (institution must take a valid institution ID)</li>
+					<li>URL: <a href="/api/equipment/">/api/equipment/</a>, Data: {"name":"SEM", "details":"details", "department":1, "contact":1, "keywords":["keyword", 1]} (keywords can contain new keywords or keyword IDs)</li>
+					<li>URL: <a href="/api/institution/">/api/institution/</a>, Data: {"name":"University College London"}</li>
+					<li>URL: <a href="/api/keyword/">/api/keyword/</a>, Data: {"keyword":"beta"}</li>
+					<li>URL: <a href="/api/protocol/">/api/protocol/</a>, Data: {"name":"SEM", "details":"details", "url":"http://example.com", "department":1, "contact":1, "keywords":["keyword"]}</li>
+				</ul>
+			</li>
+		</ul>
+
+		<h2>PUT Updated Information</h2>
+
+		<p>A PUT request is used when an entity already exists but you'd like to update the information. To PUT something you'll need some software that allows PUTting of data (There's a Firefox plugin called Poster, for instance).</p>
+
+		<ul>
+			<li>
+				Update an entity. PUT the JSON data to the URL (containing the ID) using Content-Type: application/json
+				<ul>
+					<li>URL: <a href="/api/contact/1/">/api/contact/1/</a>, Data: {"name":"Toby", "email":"toby@iiiscience.com"}</li>
+					<li>URL: <a href="/api/department/1/">/api/department/1/</a>, Data: {"name":"Department of Materials", "institution":1} (institution must take a valid institution ID)</li>
+					<li>URL: <a href="/api/equipment/1/">/api/equipment/1/</a>, Data: {"name":"SEM", "details":"details", "department":1, "contact":1, "keywords":["keyword", 1]} (keywords can contain new keywords or keyword IDs)</li>
+					<li>URL: <a href="/api/institution/1/">/api/institution/1/</a>, Data: {"name":"University College London"}</li>
+					<li>URL: <a href="/api/keyword/1/">/api/keyword/1/</a>, Data: {"keyword":"beta"}</li>
+					<li>URL: <a href="/api/protocol/1/">/api/protocol/1/</a>, Data: {"name":"SEM", "details":"details", "url":"http://example.com", "department":1, "contact":1, "keywords":["keyword"]}</li>
+				</ul>
+			</li>
+		</ul>
+	</body>
+</html>
