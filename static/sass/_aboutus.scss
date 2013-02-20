@@ -1,0 +1,92 @@
+#content.aboutus {
+
+    .container {
+        font-family: 'Trebuchet MS', sans-serif;
+        width: 70%;
+        margin: auto;
+        margin-top: 50px;
+        text-align: justify;
+
+        .inner_nav {
+            position: absolute;
+            left: 20px;
+            font-size: 0.9em;
+            width: 15%;
+
+            a {
+                display: block;
+                color: #AAA;
+                text-decoration: none;
+                margin: 5px 0;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        h1 {
+            font-size: 1.5em;
+            letter-spacing: 1px;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+
+        h2 {
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.3em;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #FB7C20;
+            margin: 20px 0;
+        }
+
+        h3 {
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .left {
+            width: 45%;
+            float: left;
+        }
+
+        .right {
+            width: 45%;
+            float: right;
+        }
+
+        .text {
+            font-size: 0.8em;
+            margin-bottom: 20px;
+
+            ul {
+                margin-left: 50px;
+                margin-top: 20px;
+                list-style-type: circle;
+
+                li {
+                    margin-top: 5px;
+                }
+            }
+
+            a {
+                color: $orange;
+            }
+
+            img {
+                height: 0.8em;
+            }
+        }
+
+        .pic {
+            text-align: center;
+            margin-bottom: 20px;
+
+            img {
+                width: 100%;
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{% import 'components.html' as components %}
+{% extends "base.html" %}
+{% set page= "index" %}
+{% block content %}
+<div class="logo">
+    <img src="/static/images/logo_blue.png" alt="iii" title="iii" />
+    <h1>Science</h1>
+    <h2>INTERNATIONAL INFORMATION ON INSTRUMENTAL SCIENCE</h2>
+</div>
+{{ components.searchbox() }}
+<div class="welcome" >
+At <img src="/static/images/logo_small.png" alt="iii" title="iii"/> Science our core goal is to provide the means to access shared facilities, equipment and protocols to further scientific research and collaboration. Click below for an example of the service we can provide for you.
+</div>
+<div class="tutorial">
+	{{ components.button("TUTORIAL","/static/images/icon_tutorial.png","/tutorial/", False) }}
+</div>
+{% endblock %}

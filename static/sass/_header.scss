@@ -1,0 +1,12 @@
+#header {
+    height: 80px;
+    text-align: center;
+    border-bottom: 5px solid $orange;
+    overflow: hidden;
+    @include background-image(linear-gradient(#384444 #56656c));
+
+    .lines {
+        height: 80px;
+        background-image: url("/static/images/lines.png");
+    }
+}

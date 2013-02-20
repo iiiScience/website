@@ -1,19 +1,25 @@
 from Constants import entities, actions
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy import Column, Integer, String, ForeignKey, or_, and_, Table
+import sqlalchemy.types as types
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, or_, and_, Table
 from sqlalchemy.ext.declarative import declarative_base
 from Errors import ModelError
 
 Base = declarative_base()
 
 protocol_keywords = Table('protocolkeywords', Base.metadata,
-    Column('protocol_id', Integer, ForeignKey('protocol.id')),
-    Column('keyword_id', Integer, ForeignKey('keyword.id'))
+    Column('protocol_id', Integer, ForeignKey('protocol.id', ondelete="CASCADE")),
+    Column('keyword_id', Integer, ForeignKey('keyword.id', ondelete="CASCADE"))
 )
 
 equipment_keywords = Table('equipmentkeywords', Base.metadata,
-    Column('equipment_id', Integer, ForeignKey('equipment.id')),
-    Column('keyword_id', Integer, ForeignKey('keyword.id'))
+    Column('equipment_id', Integer, ForeignKey('equipment.id', ondelete="CASCADE")),
+    Column('keyword_id', Integer, ForeignKey('keyword.id', ondelete="CASCADE"))
+)
+
+institution_iprange = Table('institutioniprange', Base.metadata,
+    Column('institution_id', Integer, ForeignKey('institution.id', ondelete="CASCADE")),
+    Column('iprange_id', Integer, ForeignKey('iprange.id', ondelete="CASCADE"))
 )
 
 class Entity():
@@ -39,7 +45,17 @@ class Entity():
                 raise ModelError("%s.%s must be a non-negative integer" % (E.__name__, key))
         except KeyError:
             if not optional:
-                raise ModelError("%s must have a %s" % (E.__name__, key))
+                raise ModelError("%s must have a %s field" % (E.__name__, key))
+
+    @classmethod
+    def validate_boolean(E, args, key, optional = False):
+        try:
+            boolean = args[key]
+            if not isinstance(boolean, bool):
+                raise ModelError("%s.%s must be a boolean value" % (E.__name__, key))
+        except KeyError:
+            if not optional:
+                raise ModelError("%s must have a %s field" % (E.__name__, key))
 
     @classmethod
     def validate_string(E, args, key, optional = False):
@@ -52,7 +68,7 @@ class Entity():
                 raise ModelError("%s.%s cannot be longer than %d characters" % (E.__name__, key, max_length))
         except KeyError:
             if not optional:
-                raise ModelError("%s must have a %s" % (E.__name__, key))
+                raise ModelError("%s must have a %s field" % (E.__name__, key))
 
     @classmethod
     def validate_keywords(E, args):
@@ -70,7 +86,56 @@ class Entity():
                     if len(id_or_word) > max_length:
                         raise ModelError("Each %s.keywords cannot be longer than %d characters" % (E.__name__, max_length))
         except KeyError:
-            pass
+            raise ModelError("%s must have a list of keywords: ['microscope',...]" % (E.__name__,))
+
+    @classmethod
+    def validate_ipranges(E, args):
+        try:
+            ipranges = args['ipranges']
+            if not isinstance(ipranges, list):
+                raise ModelError("%s.ipranges must be a list of IP ranges: [{'start:'192.168.0.1', 'finish':'192.168.0.10'},...]" % (E.__name__,))
+            for iprange in ipranges:
+                if not isinstance(iprange, dict):
+                    raise ModelError("%s.ipranges.iprange must be a dictionary containing start and finish IP addresses: {'start:'192.168.0.1', 'finish':'192.168.0.10'}" % (E.__name__,))
+                try:
+                    start = IP.aton(iprange['start'])
+                    finish = IP.aton(iprange['finish'])
+                    if start > finish:
+                        raise ModelError("%s.ipranges.iprange.start must be less than finish: {'start:'192.168.0.1', 'finish':'192.168.0.10'}" % (E.__name__,))
+                except KeyError:
+                    raise ModelError("%s.ipranges.iprange must be a dictionary containing start and finish IP addresses: {'start:'192.168.0.1', 'finish':'192.168.0.10'}" % (E.__name__,))
+                except (AttributeError, ValueError):
+                    raise ModelError("%s.ipranges.iprange.start|finish must be a valid IPv4 address: '192.168.0.1'" % (E.__name__,))
+        except KeyError:
+            raise ModelError("%s must have a list of ipranges: [{'start:'192.168.0.1', 'finish':'192.168.0.10'},...]" % (E.__name__,))
+
+class IP(types.TypeDecorator):
+
+    @staticmethod
+    def aton(address):
+        return reduce(lambda x,y: (x<<8) + y, [ int(x) for x in address.split('.') ])
+
+    @staticmethod
+    def ntoa(number):
+        return "%d.%d.%d.%d" % (number >> 24,(number & 0xffffff) >> 16,(number & 0xffff) >> 8,(number & 0xff))
+
+    impl = types.Integer
+
+    def process_bind_param(self, value, dialect):
+        return IP.aton(value)
+        
+    def process_result_value(self, value, dialect):
+        return IP.ntoa(value)
+
+class IPRange(Entity, Base):
+    __tablename__ = "iprange"
+
+    id = Column(Integer, primary_key=True)
+    start = Column(IP, nullable=False)
+    finish = Column(IP, nullable=False)
+
+    def __repr__(self):
+        return "<Institution id=%d start=%s finish=%s>" % (self.id, self.start, self.finish)
 
 class Keyword(Entity, Base):
     __tablename__ = "keyword"
@@ -110,14 +175,25 @@ class Contact(Entity, Base):
     email = Column(String(256))
 
     def update(self, details):
-        self.name = details['name']
-        self.email = details['email']
+        try:
+            self.name = details['name']
+        except KeyError:
+            self.name = None
+        try:
+            self.email = details['email']
+        except KeyError:
+            self.email = None
 
     def get_search_fields(self):
         return ["name", "email"]
 
     def to_dict(self, compact = True):
-        return dict(contact=dict(id=self.id, name=self.name, email=self.email))
+        d = dict(id=self.id)
+        if self.name:
+            d['name'] = self.name
+        if self.email:
+            d['email'] = self.email
+        return dict(contact=d)
 
     def __repr__(self):
         return "<Contact id=%d name=%s email=%s>" % (self.id, self.name, self.email)
@@ -143,15 +219,26 @@ class Institution(Entity, Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
+    ipranges = relationship("IPRange", secondary=institution_iprange, backref='institution')
+    university = Column(Boolean, nullable=False)
 
     def update(self, details):
         self.name = details['name']
+        if 'ipranges' in details:
+            self.ipranges = details['ipranges']
+        else:
+            self.ipranges = []
+        self.university = details['university']
 
     def get_search_fields(self):
         return ["name"]
 
     def to_dict(self, compact = True):
-        return dict(institution=dict(id=self.id, name=self.name))
+        d = dict(id=self.id, name=self.name)
+        if not compact:
+            d['ipranges'] = [{'start': ipr.start, 'finish':ipr.finish} for ipr in self.ipranges]
+            d['university'] = self.university
+        return dict(institution=d)
 
     def __repr__(self):
         return "<Institution id=%d name=%s>" % (self.id, self.name)
@@ -163,6 +250,20 @@ class Institution(Entity, Base):
         except ModelError:
             Institution.validate_id(args, "id", optional = True)
             Institution.validate_string(args, "name")
+            Institution.validate_ipranges(args)
+            Institution.validate_boolean(args,"university")
+
+    @staticmethod
+    def validate_ip(args, key):
+        try:
+            ip = args[key]
+            parts = ip.split(".")
+
+            if isinstance(id, bool) or not isinstance(id, int) or id < 0:
+                raise ModelError("%s.%s must be a non-negative integer" % (E.__name__, key))
+        except KeyError:
+            if not optional:
+                raise ModelError("Institution must have a %s IP" % (key,))  
 
     @staticmethod
     def search(q):
@@ -178,7 +279,7 @@ class Department(Entity, Base):
 
     def update(self, details):
         self.name = details['name']
-        self.institution_id = details['Institution_id']
+        self.institution_id = details['institution_id']
 
     def get_search_fields(self):
         return ["name"]
@@ -222,7 +323,7 @@ class Equipment(Entity, Base):
         self.details = details['details']
         self.department_id = details['department_id']
         self.contact_id = details['contact_id']
-        
+        self.keywords = details['keywords']
 
     def get_search_fields(self):
         return ["name", "details"]
@@ -234,7 +335,7 @@ class Equipment(Entity, Base):
             return dict(equipment=dict(id=self.id, 
                         name=self.name, 
                         details=self.details, 
-                        department=self.department.to_dict()['department'], 
+                        department=self.department.to_dict(compact=False)['department'], 
                         contact=self.contact.to_dict()['contact'], 
                         keywords=[k.keyword for k in self.keywords]))
 
@@ -281,12 +382,20 @@ class Protocol(Entity, Base):
                         name=self.name, 
                         details=self.details, 
                         url=self.url, 
-                        department=self.department.to_dict()['department'], 
+                        department=self.department.to_dict(compact=False)['department'], 
                         contact=self.contact.to_dict()['contact'],
                         keywords=[k.keyword for k in self.keywords]))
 
     def __repr__(self):
         return "<Protocol id=%d name=%s>" % (self.id, self.name)
+
+    def update(self, details):
+        self.name = details['name']
+        self.details = details['details']
+        self.url = details['url']
+        self.department_id = details['department_id']
+        self.contact_id = details['contact_id']
+        self.keywords = details['keywords']
 
     @staticmethod
     def validate(args):
@@ -316,10 +425,13 @@ if __name__ == "__main__":
 
     k1 = Keyword(keyword="alpha")
     k2 = Keyword(keyword="beta")
+    ip1 = IPRange(start='0.0.0.0', finish='1.1.1.1')
+    ip2 = IPRange(start='2.2.2.2', finish='3.3.3.3')
+    ip3 = IPRange(start='4.4.4.4', finish='5.5.5.5')
     c1 = Contact(name="Billy", email="william@iiiscience.com")
     c2 = Contact(name="Toby", email="toby@iiiscience.com")
-    i1 = Institution(name="University College London")
-    i2 = Institution(name="Imperial College London")
+    i1 = Institution(name="University College London",ipranges=[ip1], university=True)
+    i2 = Institution(name="EPSRC",ipranges=[ip2,ip3], university=False)
     d1 = Department(name="Computer Science", institution=i1)
     d2 = Department(name="Materials", institution=i2)
     e1 = Equipment(name="Scanning Electron Microscope", details= "Sees small things using electrons that scan", department=d1, contact=c1, keywords=[k1,k2])
@@ -328,6 +440,9 @@ if __name__ == "__main__":
     p2 = Protocol(name="Gold Sputterer", details= "Sputters gold, duh", url= "http://www.example.co.uk", department=d2, contact=c2, keywords=[k1])
     session.add(k1)
     session.add(k2)
+    session.add(ip1)
+    session.add(ip2)
+    session.add(ip3)
     session.add(c1)
     session.add(c2)
     session.add(i1)

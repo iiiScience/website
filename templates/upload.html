@@ -1,0 +1,122 @@
+{% import 'components.html' as components %}
+{% extends "base.html" %}
+{% set page="upload" %}
+{% block title %}Upload{% endblock %}
+{% block content %}
+<div class="container">
+    {% if institution %}
+    <div class='inner_nav'>
+        <a href='#upload'>UPLOAD</a>
+        <a href='#bulk'> - Bulk</a>
+        <a href='#single'> - Single</a>
+    </div>
+    <h1 id='upload'>UPLOAD</h1>
+    <p>If you're a researcher at an institution that subscribes to the <img src='/static/images/logo_small.png' alt="iii" title="iii" />Science database then you can upload information to the database via this page. If you have lots of information that you'd to upload in bulk then you can send us a CSV or Excel file according to the instructions below, if you've only got a few things to tell us about then use the single upload web form.</p>
+    <h2 id='bulk'>Bulk Upload</h2>
+    <p>If you would like to bulk upload information from your institution simply send us an email and attach an Excel or CSV file containing all the relevant information. Send your details here: <a href="mailto:uploads@iiiscience.com">uploads@iiiscience.com</a></p>
+    <h2 id='single'>Single Upload</h2>
+    <form id="eform" method="post" action="/api/equipment" novalidate>
+        <div class="info">
+            <h3>Equipment</h3>
+            <div>Upload some details on a piece of equipment</div>
+        </div>
+        <ul>
+            <li>
+                <label>Name<span class="req">*</span></label>
+                <div><input class='text' name="name" type="text" maxlength="128" tabindex="1" required /></div>
+                <p class="instruct" ><small>Include model name and number if you know it.</small></p>
+            </li>
+            <li>
+                <label>Details<span class="req">*</span></label>
+                <div><textarea class='text' name="details" spellcheck="true" tabindex="2" required  maxlength="1024"></textarea></div>
+                <p class="instruct" ><small>Provide as many details about this equipment as you can. Details on how to use it can be provided inside a protocol.</small></p>
+            </li>
+            <li class='left'>
+                <label>Institution</label>
+                <div>
+                    <input class='text' type="text" disabled value="{{ institution.name }}" />
+                    <input type="hidden" name="institution" value="{{ institution.id }}" />
+                </div>
+                <p class="instruct" ><small>Your institution has been determined via your IP.</small></p>
+            </li>
+            <li class='right'>
+                <label>Department<span id="req_5" class="req">*</span></label>
+                <div>
+                    <input id="depts" name="department" class='text' type="text" maxlength="128" tabindex="3" required />
+                    <input type="hidden" />
+                </div>
+                <p class="instruct"><small>In which department/facility is this equipment located.</small></p>
+            </li>
+            <li class='left'>
+                <label>Contact Name<span class="req">*</span></label>
+                <div>
+                    <input id="conts" class='text' name="contactname" type="text" maxlength="128" tabindex="4" required />
+                    <input type="hidden" />
+                </div>
+                <p class="instruct" ><small>The name of the person to be contacted regarding this equipment.</small></p>
+            </li>
+            <li class='right'>
+                <label>Contact E-mail<span class="req">*</span></label>
+                <div><input class='text' name="contactemail" type="text" maxlength="256" tabindex="5" required /></div>
+                <p class="instruct" ><small>The e-mail address of the contact. A confirmation email will be sent here.</small></p>
+            </li>
+            <li>
+                <label>Keywords</label>
+                <div><input id="keywords" class='text' name="keywords" type="text" maxlength="128" tabindex="6" /></div>
+                <p class="instruct" ><small>Please include any keywords that describe the equipment, separate them with commas.</small></p>
+            </li>
+            <li class='access'>
+                <label>Access<span class="req">*</span></label>
+                <p class="instruct" ><small>Please indicate which institutions you'd like to be able to access this equipment.</small></p>
+                <div>
+                    <input id="aall" type="radio" name="access" value="all" checked /><label for='aall'> All (public)</label>
+                    <input id="auni" type="radio" name="access" value="uni" /><label for='auni'> All universities</label>
+                    <input id="acom" type="radio" name="access" value="com" /><label for='acom'> All companies </label>
+                </div>
+            </li>
+            <li>
+                <label>Specific Access</label>
+                <p class="instruct" ><small>If you instead wish to provide very specific access you can do so here.</small></p>
+            </li>
+            <li class='left sa universities'>
+                <label>Universities</label>
+                <p class="instruct" ><small>Restrict access to only the selected universities.</small></p>
+                <div class='box'>
+                    {% for u in universities %}
+                        <div>
+                            <input id="{{ u.id }}" type="checkbox" name="access" value="{{ u.id }}" checked />
+                            <label for='{{ u.id }}'>{{ u.name }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </li>
+            <li class='right sa companies'>
+                <label>Companies</label>
+                <p class="instruct" ><small>Restrict access to only the selected companies.</small></p>
+                <div class="box">
+                    {% for c in companies %}
+                        <div>
+                            <input id="{{ c.id }}" type="checkbox" name="access" value="{{ c.id }}" checked />
+                            <label for='{{ c.id }}'>{{ c.name }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </li>
+            <li class="submit">
+                <div>
+                	{{ components.button("SUBMIT","/static/images/icon_upload.png","#submit",False)}}
+                </div>
+            </li>
+        </ul>
+    </form>
+    {% else %}
+    <h1 id='upload'>UPLOAD</h1>
+    <p>If you're a researcher at an institution that subscribes to the <img src='/static/images/logo_small.png' alt="iii" title="iii" />Science database then you can upload information to the database via this page. If you have lots of information that you'd to upload in bulk then you can send us a CSV or Excel file according to the instructions below, if you've only got a few things to tell us about then use the single upload web form.</p>
+    <h2>Unknown Institution</h2>
+    <p>Here at <img src='/static/images/logo_small.png' alt="iii" title="iii" />Science we use your IP address to determine which institution you belong to. We couldn't match your IP address ({{ request.remote_addr }}) to any of the institutions we have on file.</p>
+
+    <p>We don't want just anyone being able to add information to our database; it would quickly get filled with spam. For that reason you'll only be able to upload some data if you visit our site from a registered location. Sorry for the hassle.</p>
+    {% endif %}
+</div>
+{% endblock %}

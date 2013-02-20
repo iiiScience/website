@@ -9,32 +9,39 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, eagerload
 Constants._engine = create_engine('sqlite:///:memory:')
 Constants.Session = sessionmaker(bind=Constants._engine)
-event.listen(Constants._engine, 'connect', Constants._fk_pragma_on_connect)
-
+def _fk_pragma_on_connect(dbapi_con, con_record):
+    dbapi_con.execute('pragma foreign_keys=ON')
+event.listen(Constants._engine, 'connect', _fk_pragma_on_connect)
 import Controller
-from Models import Entity, Contact, Department, Equipment, Institution, Keyword, Protocol, Base
+import APIController
+from Models import Entity, IPRange, Contact, Department, Equipment, Institution, Keyword, Protocol, Base
 
 class ControllerTest(unittest.TestCase):
 
     VALID_ARGS = {
-            "contact": [{"name":"Toby", "email":"toby@iiiscience.com"},
-                        {"name":"Toby"},
-                        {"email":"toby@iiiscience.com"}],
-        "institution": [{"name":"University College London"}],
-            "keyword": [{"keyword":"beta"}],
-         "department": [{"name":"Department of Materials", "institution":1}],
-          "equipment": [{"name":"SEM", "details":"details", "department":1, "contact":1, "keywords":["keyword"]},
-                        {"name":"SEM", "details":"details", "department":1, "contact":1},
-                        {"name":"SEM", "details":"details", "department":1, "contact":1, "keywords":[1]},
-                        {"name":"SEM", "details":"details", "department":1, "contact":1, "keywords":[]}],
-           "protocol": [{"name":"SEM", "details":"details", "url":"http://example.com", "department":1, "contact":1, "keywords":["keyword"]},
-                        {"name":"SEM", "details":"details", "url":"http://example.com", "department":1, "contact":1},
-                        {"name":"SEM", "details":"details", "url":"http://example.com", "department":1, "contact":1, "keywords":[1]},
-                        {"name":"SEM", "details":"details", "url":"http://example.com", "department":1, "contact":1, "keywords":[]}]
+        "contact": [{"name":"Toby", "email":"toby@iiiscience.com"},
+                    {"name":"Toby"},
+                    {"email":"toby@iiiscience.com"}],
+        "institution": [{"name":"University College London","ipranges":[], "university":True},
+                        {"name":"University College London","ipranges":[], "university":True},
+                        {"name":"University College London","ipranges":[{"start":"0.0.0.0","finish":"1.1.1.1"}], "university":True},
+                        {"name":"University College London","ipranges":[{"start":"0.0.0.0","finish":"1.1.1.1"}, {"start":"2.2.2.2","finish":"3.3.3.3"}], "university":True},
+                        {"name":"University College London","ipranges":[{"start":"0.0.0.0","finish":"1.1.1.1"}], "university":True},
+                        {"name":"Charity College London","ipranges":[{"start":"0.0.0.0","finish":"1.1.1.1"}], "university":False}],
+        "keyword": [{"keyword":"beta"}],
+        "department": [{"name":"Department of Materials", "institution":1}],
+        "equipment": [{"name":"SEM", "details":"details", "department":1, "contact":1, "keywords":["keyword"]},
+                      {"name":"SEM", "details":"details", "department":1, "contact":1, "keywords":["keyword1","keyword2"]},
+                      {"name":"SEM", "details":"details", "department":1, "contact":1, "keywords":[1]},
+                      {"name":"SEM", "details":"details", "department":1, "contact":1, "keywords":[]}],
+        "protocol": [{"name":"SEM", "details":"details", "url":"http://example.com", "department":1, "contact":1, "keywords":["keyword"]},
+                     {"name":"SEM", "details":"details", "url":"http://example.com", "department":1, "contact":1, "keywords":["keyword1","keyword2"]},
+                     {"name":"SEM", "details":"details", "url":"http://example.com", "department":1, "contact":1, "keywords":[1]},
+                     {"name":"SEM", "details":"details", "url":"http://example.com", "department":1, "contact":1, "keywords":[]}]
     }
 
     INVALID_ARGS = {
-            "contact": [{"name":"n"*129},
+        "contact": [{"name":"n"*129},
                         {"email":"e"*257},
                         {},
                         {"name":1337},
@@ -42,11 +49,42 @@ class ControllerTest(unittest.TestCase):
                         {"name":{"name":"name"}},
                         {"name":True},
                         {"name":None}],
-        "institution": [{"name":"n"*65},
+        "institution": [{"name":"n"*65, "university":True,"ipranges":[]},
+                        {"university":True,"ipranges":[]},
+                        {"name":"name","ipranges":[]},
+                        {},
+                        {"ipranges":[{"start":"0.0.0.0","finish":"1.1.1.1"}], "university":True},
+                        {"name":1337, "university":True,"ipranges":[]},
+                        {"name":"name", "university":True},
+                        {"name":["name"], "university":True,"ipranges":[]},
+                        {"name":{"name":"name"}, "university":True,"ipranges":[]},
+                        {"name":True, "university":True,"ipranges":[]},
+                        {"name":None, "university":True,"ipranges":[]},
+                        {"name":"name","university":1337,"ipranges":[]},
+                        {"name":"name","university":[True],"ipranges":[]},
+                        {"name":"name","university":{"name":True},"ipranges":[]},
+                        {"name":"name","university":"True","ipranges":[]},
+                        {"name":"name","university":None,"ipranges":[]},
+                        {"name":"name","ipranges":1337, "university":True},
+                        {"name":"name","ipranges":"guess", "university":True},
+                        {"name":"name","ipranges":True, "university":True},
+                        {"name":"name","ipranges":{"start":"0.0.0.0","finish":"1.1.1.1"}, "university":True},
+                        {"name":"name","ipranges":[{"start":1,"finish":"1.1.1.1"}], "university":True},
+                        {"name":"name","ipranges":[{"start":"0.0.0.0","finish":1}], "university":True},
+                        {"name":"name","ipranges":[{"start":"a","finish":"1.1.1.1"}], "university":True},
+                        {"name":"name","ipranges":[{"start":"0.0.0.0","finish":"a"}], "university":True},
+                        {"name":"name","ipranges":[{"start":True,"finish":"1.1.1.1"}], "university":True},
+                        {"name":"name","ipranges":[{"start":"0.0.0.0","finish":True}], "university":True},
+                        {"name":"name","ipranges":[{"start":None,"finish":"1.1.1.1"}], "university":True},
+                        {"name":"name","ipranges":[{"start":"0.0.0.0","finish":None}], "university":True},
+                        {"name":"name","ipranges":[{"start":["0.0.0.0"],"finish":"1.1.1.1"}], "university":True},
+                        {"name":"name","ipranges":[{"start":"0.0.0.0","finish":["0.0.0.0"]}], "university":True},
+                        {"name":"name","ipranges":[{"start":{"start":"0.0.0.0", "university":True},"finish":"1.1.1.1"}], "university":True},
+                        {"name":"name","ipranges":[{"start":"0.0.0.0","finish":{"start":"0.0.0.0"}}], "university":True},
+                        {"name":"name","ipranges":[{"start":"1.1.1.1","finish":"0.0.0.0"}], "university":True}],
+        "keyword": [{"keyword":"k"*65},
                         {}],
-            "keyword": [{"keyword":"k"*65},
-                        {}],
-         "department": [{"name":"n"*129, "institution":1},
+        "department": [{"name":"n"*129, "institution":1},
                         {"institution":1},
                         {"name":"name"},
                         {"name":"name", "institution":"institution"},
@@ -55,7 +93,8 @@ class ControllerTest(unittest.TestCase):
                         {"name":"name", "institution":True},
                         {"name":"name", "institution":None},
                         {"name":"Department of Materials", "institution":10000}],
-          "equipment": [{"name":"n"*129, "details":"details", "department":1, "contact":1, "keywords":["keyword"]},
+        "equipment": [{"name":"n"*129, "details":"details", "department":1, "contact":1, "keywords":["keyword"]},
+                        {"name":"SEM", "details":"details", "department":1, "contact":1},
                         {"name":"SEM", "details":"d"*1025, "department":1, "contact":1, "keywords":["keyword"]},
                         {"details":"details", "department":1, "contact":1, "keywords":["keyword"]},
                         {"name":"SEM", "department":1, "contact":1, "keywords":["keyword"]},
@@ -72,7 +111,8 @@ class ControllerTest(unittest.TestCase):
                         {"name":"SEM", "details":"details", "department":1, "contact":1, "keywords":[{"keyword":"keyword"}]},
                         {"name":"SEM", "details":"details", "department":10000, "contact":1, "keywords":["keyword"]},
                         {"name":"SEM", "details":"details", "department":1, "contact":10000, "keywords":["keyword"]}],
-           "protocol": [{"name":"n"*129, "details":"details", "url":"http://example.com", "department":1, "contact":1, "keywords":["keyword"]},
+        "protocol": [{"name":"n"*129, "details":"details", "url":"http://example.com", "department":1, "contact":1, "keywords":["keyword"]},
+                        {"name":"SEM", "details":"details", "url":"http://example.com", "department":1, "contact":1},
                         {"name":"SEM", "details":"d"*1025, "url":"http://example.com", "department":1, "contact":1, "keywords":["keyword"]},
                         {"name":"SEM", "details":"details", "url":"u"*1025, "department":1, "contact":1, "keywords":["keyword"]},
                         {"name":"SEM", "details":"details", "department":1, "contact":1, "keywords":["k"*65]},
@@ -90,8 +130,20 @@ class ControllerTest(unittest.TestCase):
         self.session.add(c)
         return c
 
-    def make_institution(self, name="Imperial College London"):
-        i = Institution(name=name)
+    iprange_count = 0
+    def make_iprange(self, start=None, finish=None):
+        if start == None or finish == None:
+            start = ".".join(["%d" % self.iprange_count for i in range(0,4)])
+            self.iprange_count = self.iprange_count + 1
+            finish = ".".join(["%d" % self.iprange_count for i in range(0,4)])
+        ipr = IPRange(start=start, finish=finish)
+        self.session.add(ipr)
+        return ipr
+
+    def make_institution(self, name="Imperial College London", ipranges=None, university=True):
+        if ipranges == None:
+            ipranges = [self.make_iprange(),self.make_iprange()]
+        i = Institution(name=name, ipranges=ipranges, university=university)
         self.session.add(i)
         return i
 
@@ -148,6 +200,11 @@ class ControllerTest(unittest.TestCase):
         except AttributeError:
             pass
         try:
+            for ipr in entity.ipranges:
+                pass
+        except AttributeError:
+            pass
+        try:
             entity.department
         except AttributeError:
             pass
@@ -173,7 +230,9 @@ class ControllerTest(unittest.TestCase):
         self.session.commit()
 
     def test_api_noentity(self):
-        self.assertEquals(self.get_json('/api/'), {'error':Entity.NO_ENTITY})
+        # removed whilst /api points to html page
+        #self.assertEquals(self.get_json('/api/'), {'error':Entity.NO_ENTITY})
+        pass
 
     def test_api_badentity(self):
         for a in Constants.actions:
@@ -397,7 +456,7 @@ class ControllerTest(unittest.TestCase):
             for entity in listed['result']:
                 id = entity[e]['id']
                 lookup = self.get_json('/api/%s/%d/' % (e, id))['result'][e]
-                get = self.session.query(Controller.build(e.title())).get(id)
+                get = self.session.query(APIController.build(e.title())).get(id)
                 self.assertEquals(get.to_dict(compact=False)[e], lookup)
 
     def test_api_entity_lookup_noid(self):
@@ -473,16 +532,24 @@ class ControllerTest(unittest.TestCase):
         for e in Constants.entities:
             self.populate(e, 2)
             orig = self.get_json('/api/%s/list/' % e)['result'][0][e]
-            altered = self.VALID_ARGS[e][0]
-            r = self.app.put('/api/%s/%d/' % (e, orig['id']), data=json.dumps(altered), content_type='application/json')
-            get = self.session.query(Controller.build(e.title())).get(orig['id'])
-            altered['id'] = orig['id']
-            if 'keywords' in altered:
-                keywords = altered['keywords']
-                del(altered['keywords'])
-                self.assertEqual(keywords, get.to_dict(compact=False)[e]['keywords'], (keywords, get.to_dict(compact=False)[e]['keywords']))
-            self.assertEqual(r.status_code, 200, (altered, r.data))
-            self.assertEqual(altered, get.to_dict(compact=True)[e], (altered, get.to_dict(compact=True)[e]))
+            for altered in self.VALID_ARGS[e]:
+                url = '/api/%s/%d/' % (e, orig['id'])
+                r = self.app.put(url, data=json.dumps(altered), content_type='application/json')
+                get = self.get_json(url)
+                get = get['result'][e]
+                for subentity in [se for se in Constants.entities if se != "keyword"]:
+                    if subentity in get.keys():
+                        get[subentity] = get[subentity]['id']
+                altered['id'] = orig['id']
+                if 'keywords' in altered:
+                    keywords = []
+                    for k in altered['keywords']:
+                        if isinstance(k, int):
+                            k = self.get_json("/api/keyword/%d/" % k)['result']['keyword']['keyword']
+                        keywords.append(k)
+                    altered['keywords'] = keywords
+                self.assertEqual(r.status_code, 200, (altered, r.data))
+                self.assertEqual(altered, get)
 
     def test_api_entity_update_invalid(self):
         for e in Constants.entities:
@@ -498,9 +565,8 @@ class ControllerTest(unittest.TestCase):
         for e in Constants.entities:
             altered = self.VALID_ARGS[e][0]
             r = self.app.put('/api/%s/1/' % e, data=json.dumps(altered), content_type='application/json')
-            self.assertEqual(r.status_code, 400, (altered, r.data))
+            self.assertEqual(r.status_code, 404, (altered, r.data))
             j = json.loads(r.data)
-            self.assertTrue(False, r.data)
             self.assertTrue('error' in j)            
 
     def test_api_entity_delete_missing(self):

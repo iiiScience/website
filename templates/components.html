@@ -1,0 +1,16 @@
+{% macro button(text, logo, url, current=False) -%}
+<a href='{{ url }}' class="button{% if current %} current{% endif %}">
+    <span class='border'><span>{{ text }}</span></span>
+    <div class='icon'><img src='{{ logo }}' /></div>
+    {% if current %}<div class='marker'></div>{% endif %}
+</a>
+{%- endmacro %}
+
+{% macro searchbox(id=None, value=None) -%}
+<div {% if id %}id="{{ id }}" {% endif %}class="searchbox">
+    <form method="GET" action="/search/">
+        <input class="searchfield" type="text" name="q" placeholder="Search..." required="true" {% if value %} value="{{ value }}"{% endif %} />
+        <input class="submit" type="submit" value="Search" />
+    </form>
+</div>
+{%- endmacro %}

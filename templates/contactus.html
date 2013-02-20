@@ -1,0 +1,32 @@
+{% import 'components.html' as components %}
+{% extends "base.html" %}
+{% set page= "contactus" %}
+{% block content %}
+<div class="container">
+	<div class='inner_nav'>
+		<a href='#contactus'>CONTACT US</a>
+		<a href='#address'> - Address</a>
+		<a href='#comment'> - Leave a comment</a>
+	</div>
+
+	<h1 id='contactus'>CONTACT US</h1>
+	Feel free to give us any suggestions, feedback or comments on the services we provide for you.
+	<div id='address'>
+		<p><img src='/static/images/logo_small.png' />Science</p>
+		<p>Royal School of Mines</p>
+		<p>Exhibition Road</p>
+		<p>South Kensington</p>
+		<p>SW7 2AZ</p>
+		<p>Tel: +44 (0)207 5946 725</p>
+		<p>Email: <a href='mailto:feedback@iiiscience.com'>support@iiiscience.com</a></p>
+	</div>
+	<h2 id='comment'>Leave a Comment</h2>
+	<form method="POST" action="/contactus">
+		<textarea placeholder='Leave a comment' name='message' required='true'></textarea>
+		<input type='text' placeholder='Name' name='name' />
+		<input type='text' placeholder='Email address' name='email'/>
+        <input type='submit' value='Submit' />
+        {{ components.button("SUBMIT","/static/images/icon_upload.png","#submit", False) }}
+	</form>
+</div>
+{% endblock %}

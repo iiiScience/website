@@ -1,0 +1,11 @@
+@include font-face("VegurRegular", font-files("/static/fonts/Vegur/vegur-r_0.602-webfont.woff", 
+                                              "/static/fonts/Vegur/vegur-r_0.602-webfont.ttf",
+                                              "/static/fonts/Vegur/vegur-r_0.602-webfont.svg#VegurRegular"), "/static/fonts/Vegur/vegur-r_0.602-webfont.eot");
+
+@include font-face("VegurBold", font-files("/static/fonts/Vegur/vegur-b_0.602-webfont.woff", 
+                                           "/static/fonts/Vegur/vegur-b_0.602-webfont.ttf",
+                                           "/static/fonts/Vegur/vegur-b_0.602-webfont.svg#VegurBold"), "/static/fonts/Vegur/vegur-b_0.602-webfont.eot");
+
+@include font-face("HarabaraRegular", font-files("/static/fonts/Harabara/harabara-webfont.woff",
+                                                 "/static/fonts/Harabara/harabara-webfont.ttf",
+                                                 "/static/fonts/Harabara/harabara-webfont.svg#HarabaraRegular"), "/static/fonts/Harabara/harabara-webfont.eot");

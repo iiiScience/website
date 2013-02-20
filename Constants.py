@@ -1,12 +1,9 @@
 from flask import Flask
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 # Database stuff
-_engine = create_engine('sqlite:///iiiscience.db')
-def _fk_pragma_on_connect(dbapi_con, con_record):
-    dbapi_con.execute('pragma foreign_keys=ON')
-event.listen(_engine, 'connect', _fk_pragma_on_connect)
+_engine = create_engine('postgresql://iiiscience:Q7l%2F%2F#En25@localhost:5432/iiiscience')
 Session = sessionmaker(bind=_engine)
 
 app = Flask(__name__)

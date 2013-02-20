@@ -1,0 +1,192 @@
+ #content.upload {
+    .container {
+        font-family: 'Trebuchet MS', sans-serif;
+        width: 70%;
+        margin: auto;
+        margin-top: 50px;
+        text-align: justify;
+
+        .inner_nav {
+            position: absolute;
+            left: 20px;
+            font-size: 0.9em;
+            width: 15%;
+
+            a {
+                display: block;
+                color: #AAA;
+                text-decoration: none;
+                margin: 5px 0;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        p {
+            a {
+                color: $orange;
+            }
+        }
+
+        h1 {
+            font-size: 1.5em;
+            letter-spacing: 1px;
+            margin: 30px 0;
+        }
+
+        h2 {
+            display: inline-block;
+            font-size: 1.3em;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #FB7C20;
+            margin: 20px 0;
+        }
+
+        h3 {
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        form {
+            width: 75%;
+            margin: auto;
+        
+            .info {
+
+                h3 {
+                    margin: 10px 0;
+                    font-weight: normal;
+                }
+
+                div {
+                    margin: 10px 0;
+                    padding: 0 5px 10px 5px;
+                    color: #555;
+                    font-size: 0.8em;
+                    border-bottom: 1px solid #CCC;
+                }
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            label {
+                padding-left: 5px;
+                font-size: 0.9em;
+            }
+
+            input.text, textarea.text {
+                width: 100%;
+                padding: 5px;
+                margin-top: 5px;
+            }
+
+            textarea.text {
+                height: 100px;
+            }
+
+            span.req {
+                color: red;
+                font-weight: bold;
+            }
+
+            .instruct {
+                padding: 5px;
+                margin-bottom: 10px;
+                font-style:italic;
+                font-size: 0.7em;
+            }
+
+            li.left {
+                width: 45%;
+                display: inline-block;
+            }
+
+            li.right {
+                width: 45%;
+                display: inline-block;
+                vertical-align: top;
+                margin-left: 5%;
+                float: right;
+            }
+            
+            select {
+                min-width: 50%;
+            }
+
+            li.sa {
+                width: 40%;
+                font-size: 0.9em;
+                margin-left: 5%;
+                margin-bottom: 20px;
+
+                .box {
+                    border: 1px solid #CCC;
+                    height: 200px;
+                    overflow: auto;
+
+                    div {
+                        padding: 5px;
+
+                        &:nth-child(even) {
+                            background-color: #EEE;
+                        }
+                    }
+
+                    label {
+                        display: inline-block;
+                        width: 90%;
+                    }
+                }
+            }
+        }
+
+        .submit {
+            text-align: center;
+            height: 100px;
+
+            .button {
+                margin-top: 0;
+                @include background-image(linear-gradient(#FB7C20 #BF6016));
+
+                .border {
+                    border-right: 1px solid #AF5006;
+                }
+
+                &:hover {
+                    @include background-image(linear-gradient(#EEE #B7B7B7));
+
+                    .border {
+                        border-right: 1px solid #222;
+                        color: #222;
+                    }
+                }
+            }
+        }
+
+        .access {
+
+            div {
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            
+            span {
+                font-size: 0.8em;
+            }
+            
+            input {
+                margin-left: 6%;
+            }
+        }
+    }
+    .ui-autocomplete {
+        font-size: 0.8em !important;
+    }
+    .ui-autocomplete-loading { 
+        background: white url('/images/loading_16x16.gif') right center no-repeat; 
+    }
+}
