@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 _engine = create_engine('postgresql://iiiscience:Q7l%2F%2F#En25@localhost:5432/iiiscience')
 Session = sessionmaker(bind=_engine)
 
-app = Flask(__name__)
+app = Flask(__name__, static_path='/dont_use')
 
 entities = ['contact', 'institution', 'keyword', 'department', 'equipment', 'protocol']
 fields = ['name', 'email', 'institution', 'keywords', 'department', 'details', 'url']
