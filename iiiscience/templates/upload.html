@@ -23,13 +23,13 @@
         <ul>
             <li>
                 <label>Name<span class="req">*</span></label>
-                <div><input class='text' name="name" type="text" maxlength="128" tabindex="1" required /></div>
+                <div><input class='text' name="name" type="text" maxlength="128" tabindex="1" required placeholder="e.g. Zeiss 510 Inverted Meta Confocal" /></div>
                 <p class="instruct" ><small>Include model name and number if you know it.</small></p>
             </li>
             <li>
                 <label>Details<span class="req">*</span></label>
-                <div><textarea class='text' name="details" spellcheck="true" tabindex="2" required  maxlength="1024"></textarea></div>
-                <p class="instruct" ><small>Provide as many details about this equipment as you can. Details on how to use it can be provided inside a protocol.</small></p>
+                <div><textarea class='text' name="details" spellcheck="true" tabindex="2" required  maxlength="1024" placeholder="e.g. Detailed high resolution 2D and 3D images"></textarea></div>
+                <p class="instruct" ><small>Provide as many details about this equipment as you can. In-depth details on how to use the equipment can be additionally provided as a protocol.</small></p>
             </li>
             <li class='left'>
                 <label>Institution</label>
@@ -42,27 +42,27 @@
             <li class='right'>
                 <label>Department<span id="req_5" class="req">*</span></label>
                 <div>
-                    <input id="depts" name="department" class='text' type="text" maxlength="128" tabindex="3" required />
+                    <input id="depts" name="department" class='text' type="text" maxlength="128" tabindex="3" required placeholder="e.g. Cell and Molecular Science"/>
                     <input type="hidden" />
                 </div>
-                <p class="instruct"><small>In which department/facility is this equipment located.</small></p>
+                <p class="instruct"><small>The name of the department/facility in which this equipment is located.</small></p>
             </li>
             <li class='left'>
                 <label>Contact Name<span class="req">*</span></label>
                 <div>
-                    <input id="conts" class='text' name="contactname" type="text" maxlength="128" tabindex="4" required />
+                    <input id="conts" class='text' name="contactname" type="text" maxlength="128" tabindex="4" required placeholder="e.g. John Smith" />
                     <input type="hidden" />
                 </div>
                 <p class="instruct" ><small>The name of the person to be contacted regarding this equipment.</small></p>
             </li>
             <li class='right'>
                 <label>Contact E-mail<span class="req">*</span></label>
-                <div><input class='text' name="contactemail" type="text" maxlength="256" tabindex="5" required /></div>
+                <div><input class='text' name="contactemail" type="text" maxlength="256" tabindex="5" required placeholder="e.g. john.smith@example.com"/></div>
                 <p class="instruct" ><small>The e-mail address of the contact. A confirmation email will be sent here.</small></p>
             </li>
             <li>
                 <label>Keywords</label>
-                <div><input id="keywords" class='text' name="keywords" type="text" maxlength="128" tabindex="6" /></div>
+                <div><input id="keywords" class='text' name="keywords" type="text" maxlength="128" tabindex="6" placeholder="e.g. 2D, 3D"/></div>
                 <p class="instruct" ><small>Please include any keywords that describe the equipment, separate them with commas.</small></p>
             </li>
             <li class='access'>
