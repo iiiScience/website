@@ -1,20 +1,21 @@
-import unittest, json
+import unittest
+import json
+from iiiscience import Constants
 from sqlalchemy import event
-
-import sys
-sys.path.append("..")
-
-import Constants
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, eagerload
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import eagerload
+
 Constants._engine = create_engine('sqlite:///:memory:')
 Constants.Session = sessionmaker(bind=Constants._engine)
+
 def _fk_pragma_on_connect(dbapi_con, con_record):
     dbapi_con.execute('pragma foreign_keys=ON')
 event.listen(Constants._engine, 'connect', _fk_pragma_on_connect)
-import Controller
-import APIController
-from Models import Entity, IPRange, Contact, Department, Equipment, Institution, Keyword, Protocol, Base
+
+from iiiscience import Controller
+from iiiscience import APIController
+from iiiscience.Models import Entity, IPRange, Contact, Department, Equipment, Institution, Keyword, Protocol, Base
 
 class ControllerTest(unittest.TestCase):
 
