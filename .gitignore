@@ -3,3 +3,4 @@ venv
 *.db
 
 config.txt
+iiiscience.wsgi
