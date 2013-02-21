@@ -1,4 +1,4 @@
-#content.search {
+#content_wrapper.search {
 
     .blank {
 
@@ -23,11 +23,12 @@
 
     .list {
         background-color: #aaced4;
-        height: 100%;
         width: 50%;
-        float: left;
         border-right: 1px solid #7a9298;
-        position: relative;
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
         font-family: 'Trebuchet MS';
         letter-spacing: 1px;
         color: #3e3f31;

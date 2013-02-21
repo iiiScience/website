@@ -4,3 +4,4 @@ venv
 
 config.txt
 iiiscience.wsgi
+.sass-cache/

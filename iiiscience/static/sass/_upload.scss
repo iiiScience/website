@@ -1,28 +1,9 @@
- #content.upload {
+ #content_wrapper.upload {
     .container {
         font-family: 'Trebuchet MS', sans-serif;
-        width: 70%;
         margin: auto;
         margin-top: 50px;
         text-align: justify;
-
-        .inner_nav {
-            position: absolute;
-            left: 20px;
-            font-size: 0.9em;
-            width: 15%;
-
-            a {
-                display: block;
-                color: #AAA;
-                text-decoration: none;
-                margin: 5px 0;
-
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
-        }
 
         p {
             a {
@@ -50,7 +31,7 @@
         }
 
         form {
-            width: 75%;
+            width: 720px;
             margin: auto;
         
             .info {
@@ -98,18 +79,18 @@
                 margin-bottom: 10px;
                 font-style:italic;
                 font-size: 0.7em;
+                line-height: 12px;
             }
 
             li.left {
-                width: 45%;
+                width: 330px;
+                min-height: 100px;
                 display: inline-block;
             }
 
             li.right {
-                width: 45%;
-                display: inline-block;
-                vertical-align: top;
-                margin-left: 5%;
+                width: 330px;
+                min-height: 100px;
                 float: right;
             }
             
@@ -147,6 +128,7 @@
         .submit {
             text-align: center;
             height: 100px;
+            line-height: 13px;
 
             .button {
                 margin-top: 0;
@@ -182,11 +164,5 @@
                 margin-left: 6%;
             }
         }
-    }
-    .ui-autocomplete {
-        font-size: 0.8em !important;
-    }
-    .ui-autocomplete-loading { 
-        background: white url('/images/loading_16x16.gif') right center no-repeat; 
     }
 }

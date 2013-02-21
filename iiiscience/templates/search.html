@@ -1,6 +1,7 @@
 {% import 'components.html' as components %}
 {% extends "base.html" %}
 {% set page="search" %}
+{% if q %}{% set fill="full" %}{% endif %}
 {% block title %}Search{% endblock %}
 {% block content %}
 	{% if q %}

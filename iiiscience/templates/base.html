@@ -21,10 +21,12 @@
                 </div>
             </div>
         </div>
-        <div id="content" class="{{ page }}">
-            {% block content %}
-            There's nothing in this template yet.
-            {% endblock %}
+        <div id="content_wrapper" class="{{ page }}">
+            <div id="content" class="{{ fill|default('box') }}">
+                {% block content %}
+                There's nothing in this template yet.
+                {% endblock %}
+            </div>
         </div>
         <div id="footer_wrapper">
             <div id="footer">

@@ -1,29 +1,10 @@
-#content.aboutus {
+#content_wrapper.aboutus {
 
     .container {
         font-family: 'Trebuchet MS', sans-serif;
-        width: 70%;
         margin: auto;
         margin-top: 50px;
         text-align: justify;
-
-        .inner_nav {
-            position: absolute;
-            left: 20px;
-            font-size: 0.9em;
-            width: 15%;
-
-            a {
-                display: block;
-                color: #AAA;
-                text-decoration: none;
-                margin: 5px 0;
-
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
-        }
 
         h1 {
             font-size: 1.5em;

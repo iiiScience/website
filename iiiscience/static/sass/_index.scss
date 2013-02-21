@@ -1,4 +1,4 @@
-#content.index {
+#content_wrapper.index {
 
     .logo {
         text-align: center;
@@ -18,13 +18,12 @@
         }
 
         h2 {
-            margin: auto;
+            margin: 20px auto;
             width: 280px;
             font-size: 12px;
             font-family: 'VegurRegular';
             font-size: 1em;
             letter-spacing: 1px;
-            border: none;
         }
     }
 
@@ -46,6 +45,7 @@
     }
 
     .tutorial {
+        line-height: 13px;
         text-align: center;
 
         .button {
