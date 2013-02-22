@@ -43,7 +43,7 @@ def search():
         s = Session()
         equipment = s.query(Equipment).filter(Equipment.search(q)).limit(count).offset(offset).all()
         protocols = s.query(Protocol).filter(Protocol.search(q)).limit(count).offset(offset).all()
-        return render_template("search.html", equipment=equipment, protocols=protocols, q=q)
+        return render_template("results.html", equipment=equipment, protocols=protocols, q=q)
     except KeyError:
         return render_template("search.html")
 

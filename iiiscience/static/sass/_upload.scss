@@ -1,167 +1,169 @@
- #content_wrapper.upload {
-    .container {
-        font-family: 'Trebuchet MS', sans-serif;
-        margin: auto;
-        margin-top: 50px;
-        text-align: justify;
+ body.upload {
 
-        p {
-            a {
-                color: $orange;
-            }
-        }
-
-        h1 {
-            font-size: 1.5em;
-            letter-spacing: 1px;
-            margin: 30px 0;
-        }
-
-        h2 {
-            display: inline-block;
-            font-size: 1.3em;
-            letter-spacing: 1px;
-            border-bottom: 3px solid #FB7C20;
-            margin: 20px 0;
-        }
-
-        h3 {
-            font-size: 0.9em;
-            margin-bottom: 20px;
-        }
-
-        form {
-            width: 720px;
+    #content_wrapper {
+        .container {
+            font-family: 'Trebuchet MS', sans-serif;
             margin: auto;
-        
-            .info {
+            margin-top: 50px;
+            text-align: justify;
 
-                h3 {
-                    margin: 10px 0;
-                    font-weight: normal;
-                }
-
-                div {
-                    margin: 10px 0;
-                    padding: 0 5px 10px 5px;
-                    color: #555;
-                    font-size: 0.8em;
-                    border-bottom: 1px solid #CCC;
+            p {
+                a {
+                    color: $orange;
                 }
             }
 
-            ul {
-                list-style: none;
+            h1 {
+                font-size: 1.5em;
+                letter-spacing: 1px;
+                margin: 30px 0;
             }
 
-            label {
-                padding-left: 5px;
-                font-size: 0.9em;
-            }
-
-            input.text, textarea.text {
-                width: 100%;
-                padding: 5px;
-                margin-top: 5px;
-            }
-
-            textarea.text {
-                height: 100px;
-            }
-
-            span.req {
-                color: red;
-                font-weight: bold;
-            }
-
-            .instruct {
-                padding: 5px;
-                margin-bottom: 10px;
-                font-style:italic;
-                font-size: 0.7em;
-                line-height: 12px;
-            }
-
-            li.left {
-                width: 330px;
-                min-height: 100px;
+            h2 {
                 display: inline-block;
+                font-size: 1.3em;
+                letter-spacing: 1px;
+                border-bottom: 3px solid #FB7C20;
+                margin: 20px 0;
             }
 
-            li.right {
-                width: 330px;
-                min-height: 100px;
-                float: right;
-            }
-            
-            select {
-                min-width: 50%;
-            }
-
-            li.sa {
-                width: 40%;
+            h3 {
                 font-size: 0.9em;
-                margin-left: 5%;
                 margin-bottom: 20px;
+            }
 
-                .box {
-                    border: 1px solid #CCC;
-                    height: 200px;
-                    overflow: auto;
+            form {
+                width: 720px;
+                margin: auto;
+            
+                .info {
+
+                    h3 {
+                        margin: 10px 0;
+                        font-weight: normal;
+                    }
 
                     div {
-                        padding: 5px;
+                        margin: 10px 0;
+                        padding: 0 5px 10px 5px;
+                        color: #555;
+                        font-size: 0.8em;
+                        border-bottom: 1px solid #CCC;
+                    }
+                }
 
-                        &:nth-child(even) {
-                            background-color: #EEE;
+                ul {
+                    list-style: none;
+                }
+
+                label {
+                    padding-left: 5px;
+                    font-size: 0.9em;
+                }
+
+                input.text, textarea.text {
+                    width: 100%;
+                    padding: 5px;
+                    margin-top: 5px;
+                }
+
+                textarea.text {
+                    height: 100px;
+                }
+
+                span.req {
+                    color: red;
+                    font-weight: bold;
+                }
+
+                .instruct {
+                    padding: 5px;
+                    margin-bottom: 10px;
+                    font-style:italic;
+                    font-size: 0.7em;
+                    line-height: 12px;
+                }
+
+                li.left {
+                    width: 330px;
+                    min-height: 100px;
+                    display: inline-block;
+                }
+
+                li.right {
+                    width: 330px;
+                    min-height: 100px;
+                    float: right;
+                }
+                
+                select {
+                    min-width: 50%;
+                }
+
+                li.sa {
+                    width: 40%;
+                    font-size: 0.9em;
+                    margin-left: 5%;
+                    margin-bottom: 20px;
+
+                    .box {
+                        border: 1px solid #CCC;
+                        height: 200px;
+                        overflow: auto;
+
+                        div {
+                            padding: 5px;
+
+                            &:nth-child(even) {
+                                background-color: #EEE;
+                            }
+                        }
+
+                        label {
+                            display: inline-block;
+                            width: 90%;
                         }
                     }
-
-                    label {
-                        display: inline-block;
-                        width: 90%;
-                    }
                 }
             }
-        }
 
-        .submit {
-            text-align: center;
-            height: 100px;
-            line-height: 13px;
+            .submit {
+                text-align: center;
+                height: 100px;
 
-            .button {
-                margin-top: 0;
-                @include background-image(linear-gradient(#FB7C20 #BF6016));
-
-                .border {
-                    border-right: 1px solid #AF5006;
-                }
-
-                &:hover {
-                    @include background-image(linear-gradient(#EEE #B7B7B7));
+                .button {
+                    margin-top: 0;
+                    @include background-image(linear-gradient(#FB7C20 #BF6016));
 
                     .border {
-                        border-right: 1px solid #222;
-                        color: #222;
+                        border-right: 1px solid #AF5006;
+                    }
+
+                    &:hover {
+                        @include background-image(linear-gradient(#EEE #B7B7B7));
+
+                        .border {
+                            border-right: 1px solid #222;
+                            color: #222;
+                        }
                     }
                 }
             }
-        }
 
-        .access {
+            .access {
 
-            div {
-                margin-bottom: 10px;
-                text-align: center;
-            }
-            
-            span {
-                font-size: 0.8em;
-            }
-            
-            input {
-                margin-left: 6%;
+                div {
+                    margin-bottom: 10px;
+                    text-align: center;
+                }
+                
+                span {
+                    font-size: 0.8em;
+                }
+                
+                input {
+                    margin-left: 6%;
+                }
             }
         }
     }

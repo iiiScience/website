@@ -1,66 +1,68 @@
-#content_wrapper.index {
+body.index {
 
-    .logo {
-        text-align: center;
-        margin-top: 50px;
-        margin-bottom: 50px;
+    #content_wrapper {
 
-        img{
-            width: 200px;
-            height: 128px;
-        }
+        .logo {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 50px;
 
-        h1 {
-            font-family: 'HarabaraRegular';
-            letter-spacing: 2px;
-            color: #444;
-            font-size: 3em;
-        }
-
-        h2 {
-            margin: 20px auto;
-            width: 280px;
-            font-size: 12px;
-            font-family: 'VegurRegular';
-            font-size: 1em;
-            letter-spacing: 1px;
-        }
-    }
-
-    .searchbox {
-        margin-bottom: 40px;
-    }
-
-    .welcome {
-        text-align: center;
-        width: 300px;
-        margin: auto;
-        font-size: 12px;
-        font-family: 'VegurRegular';
-
-        img {
-            height: 0.8em;
-            margin-right: -2px;
-        }
-    }
-
-    .tutorial {
-        line-height: 13px;
-        text-align: center;
-
-        .button {
-            @include background-image(linear-gradient(#FB7C20 #BF6016));
-
-            .border {
-                border-right: 1px solid #AF5006;
+            img{
+                width: 200px;
+                height: 128px;
             }
 
-            &:hover {
-                @include background-image(linear-gradient(#EEE #B7B7B7));
+            h1 {
+                font-family: 'HarabaraRegular';
+                letter-spacing: 2px;
+                color: #444;
+                font-size: 3em;
+            }
+
+            h2 {
+                margin: 20px auto;
+                width: 280px;
+                font-size: 12px;
+                font-family: 'VegurRegular';
+                font-size: 1em;
+                letter-spacing: 1px;
+            }
+        }
+
+        .searchbox {
+            margin-bottom: 40px;
+        }
+
+        .welcome {
+            text-align: center;
+            width: 300px;
+            margin: auto;
+            font-size: 12px;
+            font-family: 'VegurRegular';
+
+            img {
+                height: 0.8em;
+                margin-right: -2px;
+            }
+        }
+
+        .tutorial {
+            text-align: center;
+
+            .button {
+                @include background-image(linear-gradient(#FB7C20 #BF6016));
 
                 .border {
-                    border-right: 1px solid #222;
-                    color: #222;
+                    border-right: 1px solid #AF5006;
+                }
+
+                &:hover {
+                    @include background-image(linear-gradient(#EEE #B7B7B7));
+
+                    .border {
+                        border-right: 1px solid #222;
+                        color: #222;
+                    }
                 }
             }
         }

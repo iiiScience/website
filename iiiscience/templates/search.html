@@ -1,91 +1,10 @@
 {% import 'components.html' as components %}
 {% extends "base.html" %}
 {% set page="search" %}
-{% if q %}{% set fill="full" %}{% endif %}
 {% block title %}Search{% endblock %}
 {% block content %}
-	{% if q %}
-		<div class="list">
-			{{ components.searchbox(value=q) }}
-		    <ol class="tabs">
-		        <li class='current'><a href="#equipment" id="tab_0">EQUIPMENT</a></li>
-		        <li><a href="#protocols" id="tab_1">PROTOCOLS</a></li>
-		    </ol>
-		    <div class="controls">
-	            <span class="for"><span class='count'>{{ equipment|count }} Result{% if equipment|count != 1 %}s{% endif %}</span> for: {{ q }}</span>
-	            <span class="order">Order by: 
-	                <select>
-	                    <option>Relevance</option>
-	                    <option>Distance</option>
-	                </select>
-	            </span>
-		    </div>
-		    <div class="results_container">
-		        <div id="results_0" count="{{ equipment|count }}">
-		            <table class="results">
-		                <tbody>
-		                {% for e in equipment %}
-		                    <tr id="e_{{ e.id }}">
-		                        <td><span class="name">{{ e.name }}</span></td>
-		                        <td class="where">
-		                            <div class="institution">{{ e.department.institution.name }}</div>
-		                            <div class="department">{{ e.department.name }}</div>
-		                        </td>
-		                    </tr>
-		                {% endfor %}
-		                </tbody>
-		            </table>
-		        </div>
-		        <div id="results_1" count="{{ protocols|count }}">
-		            <table class="results">
-		                <tbody>
-		                    {% for p in protocols %}
-		                    <tr id="p_{{ p.id }}">
-		                        <td><span class="name">{{ p.name }}</span></td>
-		                        <td class="where">
-		                            <div class="institution">{{ p.department.institution.name }}</div>
-		                            <div class="department">{{ p.department.name }}</div>
-		                        </td>
-		                    </tr>
-		                {% endfor %}
-		                </tbody>
-		            </table>
-		        </div>
-		    </div>
-		</div>
-		<div class="details">
-		    <div class='empty' >
-		    <img src='/static/images/logo_blue.png' />
-		        <div class='loading'>
-		            <img src='/static/images/loading.gif' />    
-		        </div>
-		        <div class='error'>
-		        There has been an error, please try again later.
-		        </div>
-		    </div>
-		    
-		    <div class='more'>
-		        <div class='name'></div>
-		        <div class='institution'></div>
-		        <div class='department'></div>
-		        <div class='contact'></div>
-		        <div class='keywords'>
-		        	Keywords: 
-		        	<div class='loaded'></div>
-		        </div>
-		        <div class='details'>
-		        	Details: 
-		        	<div class='loaded'></div>
-		        </div>
-		        <div class='url' ></div>
-		    </div>
-		</div>
-	{% else %}
-		<div class="blank">
-			{{ components.searchbox() }}
-			<div class="details" >
-			At <img src="/static/images/logo_small.png" alt="iii" title="iii" /> Science our core goal is to provide the means to access shared facilities, equipment and protocols to further scientific research and collaboration.
-			</div>
-		</div>
-	{% endif %}
+	{{ components.searchbox() }}
+	<div class="details" >
+	At <img src="/static/images/logo_small.png" alt="iii" title="iii" /> Science our core goal is to provide the means to access shared facilities, equipment and protocols to further scientific research and collaboration.
+	</div>
 {% endblock %}
