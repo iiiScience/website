@@ -4,13 +4,12 @@
 {% block title %}Upload{% endblock %}
 {% block content %}
 <div class="container">
-    {% if institution %}
     <h1 id='upload'>UPLOAD</h1>
     <p>If you're a researcher at an institution that subscribes to the <img src='/static/images/logo_small.png' alt="iii" title="iii" />Science database then you can upload information to the database via this page. If you have lots of information that you'd to upload in bulk then you can send us a CSV or Excel file according to the instructions below, if you've only got a few things to tell us about then use the single upload web form.</p>
     <h2 id='bulk'>Bulk Upload</h2>
     <p>If you would like to bulk upload information from your institution simply send us an email and attach an Excel or CSV file containing all the relevant information. Send your details here: <a href="mailto:uploads@iiiscience.com">uploads@iiiscience.com</a></p>
     <h2 id='single'>Single Upload</h2>
-    <form id="eform" method="post" action="/api/equipment" novalidate>
+    <form id="eform" method="post" action="/api/equipment/">
         <div class="info">
             <h3>Equipment</h3>
             <div>Upload some details on a piece of equipment</div>
@@ -46,7 +45,6 @@
                 <label>Contact Name<span class="req">*</span></label>
                 <div>
                     <input id="conts" class='text' name="contactname" type="text" maxlength="128" tabindex="4" required placeholder="e.g. John Smith" />
-                    <input type="hidden" />
                 </div>
                 <p class="instruct" ><small>The name of the person to be contacted regarding this equipment.</small></p>
             </li>
@@ -105,13 +103,5 @@
             </li>
         </ul>
     </form>
-    {% else %}
-    <h1 id='upload'>UPLOAD</h1>
-    <p>If you're a researcher at an institution that subscribes to the <img src='/static/images/logo_small.png' alt="iii" title="iii" />Science database then you can upload information to the database via this page. If you have lots of information that you'd to upload in bulk then you can send us a CSV or Excel file according to the instructions below, if you've only got a few things to tell us about then use the single upload web form.</p>
-    <h2>Unknown Institution</h2>
-    <p>Here at <img src='/static/images/logo_small.png' alt="iii" title="iii" />Science we use your IP address to determine which institution you belong to. We couldn't match your IP address ({{ request.remote_addr }}) to any of the institutions we have on file.</p>
-
-    <p>We don't want just anyone being able to add information to our database; it would quickly get filled with spam. For that reason you'll only be able to upload some data if you visit our site from a registered location. Sorry for the hassle.</p>
-    {% endif %}
 </div>
 {% endblock %}

@@ -55,8 +55,11 @@ def upload():
     institution = None
     if ipr:
         institution = session.query(Institution).filter(Institution.ipranges.contains(ipr)).first()
-    institutions = session.query(Institution).all()
-    return render_template("upload.html", institution=institution, universities=institutions, companies=institutions)
+    institutions = session.query(Institution).filter(Institution.university == True)
+    companies = session.query(Institution).filter(Institution.university == False)
+    if not institution:
+        return render_template("no_institution.html", universities=institutions, companies=companies)    
+    return render_template("upload.html", institution=institution, universities=institutions, companies=companies)
 
 @app.route("/help/")
 def help():

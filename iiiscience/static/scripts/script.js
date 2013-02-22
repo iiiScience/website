@@ -30,6 +30,75 @@ IIISCIENCE = {
 		    });
 		});
 		RESULTS.details_empty();
+	},
+	upload: function() {
+		$('form a.button').click(function(){
+			$(this).parents('form').submit();
+			return false;
+		});
+		$('form').submit(function() {
+			if (UPLOAD.validate(this)) {
+				UPLOAD.make_equipment(this);
+			}
+			return false;
+		});
+		$("#aall").change(function() {
+			if ($(this).is(':checked')) {
+				$('.sa input').prop('checked', true);
+			}
+		});
+		$("#auni").change(function() {
+			if ($(this).is(':checked')) {
+				$('.sa.universities input').prop('checked', true);
+				$('.sa.companies input').prop('checked', false);
+			}
+		});
+		$("#acom").change(function() {
+			if ($(this).is(':checked')) {
+				$('.sa.companies input').prop('checked', true);
+				$('.sa.universities input').prop('checked', false);
+			}
+		});
+		$(".sa.universities input").change(function() {
+			if ($(this).is(':checked')) {
+				if (!$('.sa.universities input').not(':checked').length) {
+					if ($("#acom").is(':checked')) {
+						$("#aall").prop('checked', true);
+					}
+					else {
+						$("#auni").prop('checked', true);
+					}
+				}
+			}
+			else {
+				if ($("#aall").is(':checked')) {
+					$("#acom").prop('checked', true);
+				}
+				else if ($("#auni").is(':checked')) {
+					$("#auni").prop('checked', false, true);
+				}
+			}
+		});
+		$(".sa.companies input").change(function() {
+			if ($(this).is(':checked')) {
+				if (!$('.sa.companies input').not(':checked').length) {
+					if ($("#auni").is(':checked')) {
+						$("#aall").prop('checked', true);
+					}
+					else {
+						$("#acom").prop('checked', true);
+					}
+				}
+			}
+			else {
+				if ($("#aall").is(':checked')) {
+					$("#auni").prop('checked', true);
+				}
+				else if ($("#acom").is(':checked')) {
+					$("#acom").prop('checked', false, true);
+				}
+			}
+		});	
 	}
 };
 UTIL = {
@@ -44,6 +113,9 @@ UTIL = {
     	$.each(document.body.className.split(/\s+/), function(i,classnm) {
       		UTIL.fire(classnm);
     	});
-  	}
+  	},
+  	error: function(element, message) {
+		window.alert(message);
+	}
 };
 $(document).ready(UTIL.loadEvents);

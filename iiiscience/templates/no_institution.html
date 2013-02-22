@@ -1,0 +1,27 @@
+{% import 'components.html' as components %}
+{% extends "base.html" %}
+{% set page="no_institution" %}
+{% block title %}Upload - Unknown institution{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 id='upload'>UPLOAD</h1>
+    <p>If you're a researcher at an institution that subscribes to the <img src='/static/images/logo_small.png' alt="iii" title="iii" />Science database then you can upload information to the database via this page. If you have lots of information that you'd to upload in bulk then you can send us a CSV or Excel file according to the instructions below, if you've only got a few things to tell us about then use the single upload web form.</p>
+    <h2>Unknown Institution</h2>
+    <p>Here at <img src='/static/images/logo_small.png' alt="iii" title="iii" />Science we use your IP address to determine which institution you belong to. We couldn't match your IP address ({{ request.remote_addr }}) to any of the institutions we have on file.</p>
+
+    <p>We don't want just anyone being able to add information to our database; it would quickly get filled with spam. For that reason you'll only be able to upload some data if you visit our site from a registered location. Sorry for the hassle.</p>
+
+    <h2>Institution Spoofing</h2>
+
+    <p>We're only in alpha testing so for convenience you can spoof your institution. Click one of these options to try it out:</p>
+
+    <ul>
+        {% for u in universities %}
+        <li><a href="/upload/?ip={{ u.ipranges[0].start }}">{{ u.name }}</a></li>
+        {% endfor %}
+        {% for c in companies %}
+        <li><a href="/upload/?ip={{ c.ipranges[0].start }}">{{ c.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

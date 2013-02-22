@@ -100,7 +100,7 @@ def api_create(entity):
     except ModelError as me:
         return jsonify(error=me.reason), 400
     except IntegrityError as ie: 
-        return jsonify(error="Invalid ID provided"), 400
+        return jsonify(error="Integrity error", e=ie), 400
 
 @app.route('/api/<entity>/<int:id>/', methods=['GET'])
 def api_lookup(entity, id):
