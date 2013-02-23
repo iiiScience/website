@@ -1,26 +1,89 @@
 UPLOAD = {
+	init: function() {
+		$('form a.button').click(function(){
+			$(this).parents('form').submit();
+			return false;
+		});
+		$('form').submit(function() {
+			if (UPLOAD.validate(this)) {
+				UPLOAD.make_equipment(this);
+			}
+			else {
+				UTIL.error('There is something wrong with the details you have provided');
+			}
+			return false;
+		});
+		$("#aall").change(function() {
+			if ($(this).is(':checked')) {
+				$('.sa input').not(":disabled").prop('checked', true);
+			}
+		});
+		$("#auni").change(function() {
+			if ($(this).is(':checked')) {
+				$('.sa.universities input').not(":disabled").prop('checked', true);
+				$('.sa.companies input').not(":disabled").prop('checked', false);
+			}
+		});
+		$("#acom").change(function() {
+			if ($(this).is(':checked')) {
+				$('.sa.companies input').not(":disabled").prop('checked', true);
+				$('.sa.universities input').not(":disabled").prop('checked', false);
+			}
+		});
+		$(".sa.universities input").change(function() {
+			if ($(this).is(':checked')) {
+				if (!$('.sa.universities input').not(':checked').length) {
+					if ($("#acom").is(':checked')) {
+						$("#aall").prop('checked', true);
+					}
+					else {
+						$("#auni").prop('checked', true);
+					}
+				}
+			}
+			else {
+				if ($("#aall").is(':checked')) {
+					$("#acom").prop('checked', true);
+				}
+				else if ($("#auni").is(':checked')) {
+					$("#auni").prop('checked', false, true);
+				}
+			}
+		});
+		$(".sa.companies input").change(function() {
+			if ($(this).is(':checked')) {
+				if (!$('.sa.companies input').not(':checked').length) {
+					if ($("#auni").is(':checked')) {
+						$("#aall").prop('checked', true);
+					}
+					else {
+						$("#acom").prop('checked', true);
+					}
+				}
+			}
+			else {
+				if ($("#aall").is(':checked')) {
+					$("#auni").prop('checked', true);
+				}
+				else if ($("#acom").is(':checked')) {
+					$("#acom").prop('checked', false, true);
+				}
+			}
+		});	
+	},
 	validate: function(form) {
 		var valid = true;
-		if (!$("input[name='name']").val()) {
-			UTIL.error(this, "You must provide a name");
-			valid = false;
-		}
-		if (!$("textarea[name='details']").val()) {
-			UTIL.error(this, "You must provide some details");
-			valid = false;
-		}
-		if (!$("#depts").val()) {
-			UTIL.error(this, "You must specify a department");
-			valid = false;
-		}
-		if (!$("#conts").val()) {
-			UTIL.error(this, "You must provide a contact");
-			valid = false;
-		}
-		if (!$("input[name='contactemail']").val()) {
-			UTIL.error(this, "You must provide a contact email address");
-			valid = false;
-		}
+		var input = [$("input[name='name']"),
+					 $("textarea[name='details']"),
+					 $("#depts"),
+					 $("#conts"),
+					 $("input[name='contactemail']")];
+		$.each(input, function(index, value) {
+			if (!value.val()) {
+				value.parents('li').addClass("error");
+				valid = false;
+			}
+		});
 		return valid;
 	},
 	make_department: function(name, institution, entity) {
@@ -84,7 +147,6 @@ UPLOAD = {
 			if (!e.keywords[index]) {e.keywords.splice(index, 1);}
 		});
 		$.when.apply(null, waitingOn).done(function() {
-			console.log(e);
 			$.ajax({
 				type: "POST",
 				url: '/api/equipment/',
@@ -93,10 +155,10 @@ UPLOAD = {
 				dataType: "json",
 				success: function(data, textStatus, jqXHR) {
 					if (data.error) {
-						UTIL.error(null, 'There was an error with your submission, please try again later.');
+						UTIL.error('There was an error with your submission, something went wrong on our end. Sorry, please try again later.');
 					}
 					else {
-						window.location = "/thankyou/";
+						window.location = "/upload/thankyou/";
 					}
 				}
 			});

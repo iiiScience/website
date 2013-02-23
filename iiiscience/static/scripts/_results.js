@@ -1,4 +1,32 @@
 RESULTS = {
+    init: function() {
+        $("#results_1").hide();
+        $(".tabs a").click(function() {
+            if (!$(this).parent().hasClass("current")) {
+                var index = Number($(this).attr("id").split("_")[1]);
+                RESULTS.hide_tab((index+1) % 2);
+                RESULTS.show_tab(index);
+            }
+        });
+        $(".list .results tr").click(function() {
+            RESULTS.details_loading();
+            var url = "/api/" + $(this).attr("id").replace("p_", "protocol/").replace("e_", "equipment/") + "/";
+            $.getJSON(url, function(data) {
+                if (data.result) {
+                    if (data.result.equipment) {
+                        RESULTS.details_show(data.result.equipment);
+                    }
+                    else if (data.result.protocol) {
+                        RESULTS.details_show(data.result.protocol);
+                    }
+                }
+                else {
+                    UTIL.error("There has been an error fetching the details. Please try again.");
+                }
+            });
+        });
+        RESULTS.details_empty();
+    },
     hide_tab: function(index) {
         $("#results_"+index).hide();
         $("#tab_"+index).parent().removeClass("current");
@@ -12,19 +40,11 @@ RESULTS = {
     details_empty: function() {
         $(".details .empty").show();
         $(".details .loading").hide();
-        $(".details .error").hide();
         $(".details .more").hide();
     },
     details_loading: function() {
         $(".details .empty").show();
         $(".details .loading").show();
-        $(".details .error").hide();
-        $(".details .more").hide();
-    },
-    details_error: function(message) {
-        $(".details .empty").show();
-        $(".details .loading").hide();
-        $(".details .error").text(message).show();
         $(".details .more").hide();
     },
     details_show: function(details) {
@@ -46,7 +66,6 @@ RESULTS = {
 
         $(".details .empty").hide();
         $(".details .loading").hide();
-        $(".details .error").hide();
         $(".details .more").show();
     }
 }

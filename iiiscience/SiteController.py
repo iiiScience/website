@@ -1,6 +1,6 @@
 from Constants import app, Session
 from flask import render_template, request
-from Models import Equipment, Protocol, Institution, IPRange
+from Models import Equipment, Protocol, Institution, IPRange, Keyword, Department
 
 def get_count():
     default = 20
@@ -58,8 +58,14 @@ def upload():
     institutions = session.query(Institution).filter(Institution.university == True)
     companies = session.query(Institution).filter(Institution.university == False)
     if not institution:
-        return render_template("no_institution.html", universities=institutions, companies=companies)    
-    return render_template("upload.html", institution=institution, universities=institutions, companies=companies)
+        return render_template("no_institution.html", universities=institutions, companies=companies)
+    keywords = session.query(Keyword).all()
+    departments = session.query(Department).filter(Department.institution == institution)
+    return render_template("upload.html", institution=institution, universities=institutions, companies=companies, keywords=keywords, departments=departments)
+
+@app.route("/upload/thankyou/")
+def upload_thankyou():
+    return render_template("thankyou.html")
 
 @app.route("/help/")
 def help():
