@@ -69,7 +69,7 @@ UPLOAD = {
 					$("#acom").prop('checked', false, true);
 				}
 			}
-		});	
+		});
 	},
 	validate: function(form) {
 		var valid = true;
