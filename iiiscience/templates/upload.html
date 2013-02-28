@@ -105,7 +105,7 @@
     </form>
 </div>
 <script type='text/javascript'>
-    var departments = [{% for d in departments %}{'name': '{{ d.name }}', 'value': {{ d.id }}}, {% endfor %}];
-    var keywords = [{% for k in keywords %}{'name': '{{ k.keyword }}', 'value': {{ k.id }}}, {% endfor %}];
+    var departments = [{% for d in departments %}{'value': '{{ d.name }}', 'data': {{ d.id }}}, {% endfor %}];
+    var keywords = [{% for k in keywords %}{'value': '{{ k.keyword }}', 'data': {{ k.id }}}, {% endfor %}];
 </script>
 {% endblock %}

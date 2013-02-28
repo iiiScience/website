@@ -70,6 +70,13 @@ UPLOAD = {
 				}
 			}
 		});
+		$('#depts').autocomplete({
+		    lookup: departments
+		});
+		$('#keywords').autocomplete({
+		    lookup: keywords,
+		    delimiter: ','
+		});
 	},
 	validate: function(form) {
 		var valid = true;
@@ -129,22 +136,27 @@ UPLOAD = {
 		$(form).find("textarea[name='details']").each(function() {
 			e.details = $(this).val();
 		});
-		$(form).find("input[name='department']").not(':hidden').each(function() {
-			var id = $(this).next('input').val();
-			if (id) {
-				e.department = id;
-			}
-			else {
-				waitingOn.push(UPLOAD.make_department($(this).val(), $("input[name='institution']").val(), e));
-			}
-		});
+
+		var depts = $("#depts");
+		var matched = $.grep(departments, function(e){ return e.value === depts.val(); });
+		if (matched.length > 0) {
+			e.department = matched[0].data;
+		}
+		else {
+			waitingOn.push(UPLOAD.make_department(depts.val(), $("input[name='institution']").val(), e));
+		}
+
 		$(form).find("input[name='contactname']").each(function() {
 			waitingOn.push(UPLOAD.make_contact($(this).val(), $("input[name='contactemail']").val(), e));
 		});
+
 		e.keywords = $("#keywords").val().split(',');
 		$.map(e.keywords, function(element, index) {
 			e.keywords[index] = $.trim(element);
-			if (!e.keywords[index]) {e.keywords.splice(index, 1);}
+			var matched = $.grep(keywords, function(k){ return k.value === e.keywords[index]; });
+			if (matched.length > 0) {
+				e.keywords[index] = matched[0].data;
+			}
 		});
 		$.when.apply(null, waitingOn).done(function() {
 			$.ajax({
